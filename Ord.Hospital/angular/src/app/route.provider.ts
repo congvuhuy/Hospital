@@ -16,10 +16,33 @@ function configureRoutes(routesService: RoutesService) {
         layout: eLayoutType.application,
       },
       {
-        path: '/address/province',
-        name: 'province',
+        path: '/address',
+        name: 'address',
+        order: 2,
         iconClass: 'fas fa-home',
-        order: 1,
+        layout: eLayoutType.application,
+      },
+      {
+        path: '/address/province',
+
+        name: 'province',
+        parentName: 'address',
+        iconClass: 'fas fa-home',
+        layout: eLayoutType.application,
+      },
+
+      {
+        path: '/address/district',
+        name: 'district',
+        parentName: 'address',
+        iconClass: 'fas fa-home',
+        layout: eLayoutType.application,
+      },
+      {
+        path: '/address/commune',
+        name: 'commune',
+        parentName: 'address',
+        iconClass: 'fas fa-home',
         layout: eLayoutType.application,
       },
     ]);

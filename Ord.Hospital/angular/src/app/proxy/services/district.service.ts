@@ -45,19 +45,10 @@ export class DistrictService {
   
 
   getByCodeByCode = (code: number, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, DistrictDto[]>({
+    this.restService.request<any, DistrictDto>({
       method: 'GET',
       url: '/api/app/district/by-code',
       params: { code },
-    },
-    { apiName: this.apiName,...config });
-  
-
-  getFilter = (pageNumber: number, pageSize: number, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, DistrictDto[]>({
-      method: 'GET',
-      url: '/api/app/district/filter',
-      params: { pageNumber, pageSize },
     },
     { apiName: this.apiName,...config });
   
@@ -71,11 +62,29 @@ export class DistrictService {
     { apiName: this.apiName,...config });
   
 
+  getListPaging = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PagedResultDto<DistrictDto>>({
+      method: 'GET',
+      url: '/api/app/district/paging',
+      params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+    },
+    { apiName: this.apiName,...config });
+  
+
   update = (id: number, input: CreateUpdateDistrictDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, DistrictDto>({
       method: 'PUT',
       url: `/api/app/district/${id}`,
       body: input,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getListByProvinceCodeByProvinceCode = (provinceCode: number, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, DistrictDto[]>({
+      method: 'GET',
+      url: '/api/app/district/get-list-by-province-code',
+      params: { provinceCode },
     },
     { apiName: this.apiName,...config });
 

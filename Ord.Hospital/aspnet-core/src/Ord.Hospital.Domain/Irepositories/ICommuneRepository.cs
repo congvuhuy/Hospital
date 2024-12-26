@@ -10,7 +10,10 @@ namespace Ord.Hospital.Irepositories
 {
     public interface ICommuneRepository : IScopedDependency
     {
-        Task<List<Commune>> GetAllAsync(int pageNumber, int pageSize);
+
+        public Task<List<Commune>> GetPagedCommunesAsync(int SkipCount, int MaxResultCount, string Sorting);
+        public Task<int> GetTotalCountAsync();
         Task<Commune> GetByCodeAsync(int code);
+        Task<List<Commune>> GetByDistrictCodeAsync(int DistrictCode);
     }
 }

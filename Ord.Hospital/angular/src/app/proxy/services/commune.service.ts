@@ -44,19 +44,19 @@ export class CommuneService {
     { apiName: this.apiName,...config });
   
 
-  getFilter = (pageNumber: number, pageSize: number, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, CommuneDto[]>({
-      method: 'GET',
-      url: '/api/app/commune/filter',
-      params: { pageNumber, pageSize },
-    },
-    { apiName: this.apiName,...config });
-  
-
   getList = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<CommuneDto>>({
       method: 'GET',
       url: '/api/app/commune',
+      params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getListPaging = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PagedResultDto<CommuneDto>>({
+      method: 'GET',
+      url: '/api/app/commune/paging',
       params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName,...config });
@@ -67,6 +67,15 @@ export class CommuneService {
       method: 'PUT',
       url: `/api/app/commune/${id}`,
       body: input,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getListByDistrictCodeByDistrictCode = (districtCode: number, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, CommuneDto[]>({
+      method: 'GET',
+      url: '/api/app/commune/get-list-by-district-code',
+      params: { districtCode },
     },
     { apiName: this.apiName,...config });
 

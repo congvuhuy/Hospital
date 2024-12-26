@@ -53,19 +53,19 @@ export class ProvinceService {
     { apiName: this.apiName,...config });
   
 
-  getFilterAllByPageNumberAndPageSize = (pageNumber: number, pageSize: number, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, ProvinceDto[]>({
-      method: 'GET',
-      url: '/api/app/province/filter-all',
-      params: { pageNumber, pageSize },
-    },
-    { apiName: this.apiName,...config });
-  
-
   getList = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<ProvinceDto>>({
       method: 'GET',
       url: '/api/app/province',
+      params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getListPaging = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PagedResultDto<ProvinceDto>>({
+      method: 'GET',
+      url: '/api/app/province/paging',
       params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName,...config });

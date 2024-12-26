@@ -43,26 +43,57 @@ namespace Ord.Hospital.Services
 
         public override async Task<CommuneDto> CreateAsync(CreateUpdateCommuneDto input)
         {
+            try
+            {
+                var provinceCode = await _provinceService.GetByCode(input.ProvinceCode);
+                var districtCode = await _districtService.GetByCode(input.DistrictCode);
+                var communeCode = await _communeRepository.GetByCodeAsync(input.CommuneCode);
+                if (communeCode != null)
+                {
+                    throw new AbpValidationException("Mã xã đã tồn tại",
+                          new List<ValidationResult> { new ValidationResult("Mã xã đã tồn tại") });
+                }
+                if (provinceCode.ProvinceCode != districtCode.ProvinceCode)
+                {
+                    throw new AbpValidationException("Tỉnh bạn chọn không tồn tại huyện này",
+                        new List<ValidationResult> { new ValidationResult("Tỉnh bạn chọn không tồn tại huyện này") });
+                }
+                if (districtCode==null)
+                {
+                    throw new AbpValidationException("Huyện bạn chọn không tồn tại",
+                       new List<ValidationResult> { new ValidationResult("Huyện bạn chọn không tồn tại") });
+                }
+
+                return await base.CreateAsync(input);
+            }
+            catch(Exception ex)
+            {
+                throw (ex);
+            }
+        }
+        public override async Task<CommuneDto> UpdateAsync(int id,CreateUpdateCommuneDto input)
+        {
             var provinceCode = await _provinceService.GetByCode(input.ProvinceCode);
             var districtCode = await _districtService.GetByCode(input.DistrictCode);
             var communeCode = await _communeRepository.GetByCodeAsync(input.CommuneCode);
-            if (communeCode != null)
+            var communeId = _repository.GetAsync(id);
+            if (communeCode != null && communeCode.Id!=id)
             {
                 throw new AbpValidationException("Mã xã đã tồn tại",
                       new List<ValidationResult> { new ValidationResult("Mã xã đã tồn tại") });
             }
-            if (provinceCode != null)
+            if (provinceCode.ProvinceCode != districtCode.ProvinceCode)
             {
-                throw new AbpValidationException("Tỉnh bạn chọn không tồn tại",
-                    new List<ValidationResult> { new ValidationResult("Tỉnh bạn chọn không tồn tại") });
+                throw new AbpValidationException("Tỉnh bạn chọn không tồn tại huyện này",
+                    new List<ValidationResult> { new ValidationResult("Tỉnh bạn chọn không tồn tại huyện này") });
             }
-            if (!districtCode.Any())
+            if (districtCode == null)
             {
                 throw new AbpValidationException("Huyện bạn chọn không tồn tại",
                    new List<ValidationResult> { new ValidationResult("Huyện bạn chọn không tồn tại") });
             }
 
-            return await base.CreateAsync(input);
+            return await base.UpdateAsync(id,input);
         }
         public async Task CreateMultipleAsync(List<CreateUpdateCommuneDto> communeList)
         {
@@ -79,10 +110,24 @@ namespace Ord.Hospital.Services
         }
 
 
-        public async Task<List<CommuneDto>> GetFilterAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultDto<CommuneDto>> GetListPagingAsync(PagedAndSortedResultRequestDto input)
         {
-            var communes = await _communeRepository.GetAllAsync(pageNumber, pageSize);
-            return _mapper.Map<List<CommuneDto>>(communes);
+            var totalCount = await _communeRepository.GetTotalCountAsync();
+            var Communes = await _communeRepository.GetPagedCommunesAsync(input.SkipCount, input.MaxResultCount, input.Sorting);
+
+            var communeDtos = _mapper.Map<List<Commune>, List<CommuneDto>>(Communes);
+
+            return new PagedResultDto<CommuneDto>
+            {
+                TotalCount = totalCount,
+                Items = communeDtos
+            };
+        }
+
+        public async Task<List<CommuneDto>> getListByDistrictCode(int districtCode)
+        {
+            var communeByProvinceCode = await _communeRepository.GetByDistrictCodeAsync(districtCode);
+            return _mapper.Map<List<CommuneDto>>(communeByProvinceCode);
         }
     }
 }

@@ -4,6 +4,7 @@ using Ord.Hospital.EntityFrameworkCore;
 using Ord.Hospital.Irepositories;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,26 +21,39 @@ namespace Ord.Hospital.Repositories
         {
 
         }
-        public virtual async Task<List<Province>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<List<Province>> GetPagedProvincesAsync(int SkipCount, int MaxResultCount, string Sorting)
+        {
+            {
+                    var dbConnection = await GetDbConnectionAsync();
+                    var sql = $@" 
+                        SELECT * 
+                        FROM Province
+                        WHERE IsDeleted=false
+                        ORDER BY {Sorting ?? "Id"} 
+                        LIMIT @MaxResultCount 
+                        OFFSET @SkipCount";
+                        
+                    var parameters = new { SkipCount, MaxResultCount };
+                    return (await dbConnection.QueryAsync<Province>(sql, parameters)).ToList();
+           
+            }
+        }
+
+
+        public async Task<int> GetTotalCountAsync()
         {
             var dbConnection = await GetDbConnectionAsync();
-            var sql = @"SELECT * FROM Province ORDER BY ProvinceCode LIMIT @PageSize OFFSET @Offset;";
-            var parameters = new
-            {
-                Offset = (pageNumber - 1) * pageSize,
-                PageSize = pageSize
-            };
-
-            return (await dbConnection.QueryAsync<Province>(sql, parameters, transaction: await GetDbTransactionAsync())).ToList();
+                var sql = "SELECT COUNT(1) FROM Province";
+                return await dbConnection.ExecuteScalarAsync<int>(sql);
         }
 
         public async Task<Province> GetByCodeAsync(int code)
         {
-
             var dbConnection = await GetDbConnectionAsync();
             var sql = @"SELECT * FROM Province WHERE ProvinceCode=@Code";
             var parameters = new { Code = code };
-            return (dbConnection.QueryFirstOrDefault<Province>(sql, parameters, transaction: await GetDbTransactionAsync()));
+            return  (dbConnection.QueryFirstOrDefault<Province>(sql, parameters, transaction: await GetDbTransactionAsync()));
         }
+
     }
 }

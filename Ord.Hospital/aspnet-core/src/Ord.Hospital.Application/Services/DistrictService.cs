@@ -50,7 +50,7 @@ namespace Ord.Hospital.Services
                     new List<ValidationResult> { new ValidationResult("Mã huyện đã tồn tại") });
 
             }
-            if (provinceCode != null)
+            if (provinceCode == null)
             {
                 throw new AbpValidationException("Tỉnh bạn chọn không tồn tại",
                     new List<ValidationResult> { new ValidationResult("Tỉnh bạn chọn không tồn tại") });
@@ -62,29 +62,39 @@ namespace Ord.Hospital.Services
         {
             var provinceCode = await _provinceService.GetByCode(input.ProvinceCode);
             var districtCode = await _districtRepository.GetByCodeAsync(input.DistrictCode);
-            if (districtCode != null)
+            var districtId= _repository.GetAsync(id);
+
+            if (districtCode != null && districtCode.Id != id)
             {
                 throw new AbpValidationException("Huyện bạn chọn đã tồn tại",
                     new List<ValidationResult> { new ValidationResult("Huyện bạn chọn đã tồn tại") });
 
             }
-            if (provinceCode != null)
+            if (provinceCode == null)
             {
                 throw new AbpValidationException("Tỉnh bạn chọn không tồn tại",
                     new List<ValidationResult> { new ValidationResult("Tỉnh bạn chọn không tồn tại") });
             }
 
-            return await base.CreateAsync(input);
+            return await base.UpdateAsync(id,input);
         }
-        public async Task<List<DistrictDto>> GetFilterAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultDto<DistrictDto>> GetListPagingAsync(PagedAndSortedResultRequestDto input)
         {
-            var districts = await _districtRepository.GetAllAsync(pageNumber, pageSize);
-            return _mapper.Map<List<DistrictDto>>(districts);
+            var totalCount = await _districtRepository.GetTotalCountAsync();
+            var districts = await _districtRepository.GetPagedDistrictsAsync(input.SkipCount, input.MaxResultCount, input.Sorting);
+
+            var districtDtos = _mapper.Map<List<District>, List<DistrictDto>>(districts);
+
+            return new PagedResultDto<DistrictDto>
+            {
+                TotalCount = totalCount,
+                Items = districtDtos
+            };
         }
-        public async Task<List<DistrictDto>> GetByCode(int code)
+        public async Task<DistrictDto> GetByCode(int code)
         {
-            var districts = await _districtRepository.GetByCodeAsync(code);
-            return _mapper.Map<List<DistrictDto>>(districts);
+            var district = await _districtRepository.GetByCodeAsync(code);
+            return _mapper.Map<DistrictDto>(district);
         }
 
         public async Task CreateMultipleAsync(List<CreateUpdateDistrictDto> districtList)
@@ -98,6 +108,12 @@ namespace Ord.Hospital.Services
             {
                 throw;
             }
+        }
+
+        public async Task<List<DistrictDto>> getListByProvinceCode(int provinceCode)
+        {
+            var districtByProvinceCode=await _districtRepository.GetByProvinceCodeAsync(provinceCode);
+            return _mapper.Map<List<DistrictDto>>(districtByProvinceCode);
         }
     }
 }

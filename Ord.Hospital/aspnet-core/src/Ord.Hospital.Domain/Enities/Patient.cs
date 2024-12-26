@@ -16,13 +16,13 @@ namespace Ord.Hospital.Enities
         [StringLength(70)]
         public string PatientName { get; set; }
         [Required]
-        public int ProcevinCode { get; set; }
+        public int ProvinceCode { get; set; }
         [Required]
         public int DistrictCode { get; set; }
         [Required]
-        public int CommnuneCode { get; set; }
+        public int CommuneCode { get; set; }
         [Required]
         public string Address { get; set; }
-        public int HopitalID { get; set; }
+        public int HospitalID { get; set; }
     }
 }

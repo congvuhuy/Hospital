@@ -19,17 +19,29 @@ namespace Ord.Hospital.Repositories
         {
 
         }
-        public virtual async Task<List<District>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<List<District>> GetPagedDistrictsAsync(int SkipCount, int MaxResultCount, string Sorting)
+        {
+            {
+                var dbConnection = await GetDbConnectionAsync();
+                var sql = $@" 
+                        SELECT * 
+                        FROM District
+                        WHERE IsDeleted=false
+                        ORDER BY {Sorting ?? "Id"} 
+                        LIMIT @MaxResultCount 
+                        OFFSET @SkipCount";
+
+                var parameters = new { SkipCount, MaxResultCount };
+                return (await dbConnection.QueryAsync<District>(sql, parameters)).ToList();
+
+            }
+        }
+
+        public async Task<int> GetTotalCountAsync()
         {
             var dbConnection = await GetDbConnectionAsync();
-            var sql = @"SELECT * FROM District ORDER BY ProvinceCode LIMIT @PageSize OFFSET @Offset;";
-            var parameters = new
-            {
-                Offset = (pageNumber - 1) * pageSize,
-                PageSize = pageSize
-            };
-
-            return (await dbConnection.QueryAsync<District>(sql, parameters, transaction: await GetDbTransactionAsync())).ToList();
+            var sql = "SELECT COUNT(1) FROM District";
+            return await dbConnection.ExecuteScalarAsync<int>(sql);
         }
 
         public async Task<District> GetByCodeAsync(int code)
@@ -38,6 +50,14 @@ namespace Ord.Hospital.Repositories
             var sql = @"SELECT * FROM District WHERE DistrictCode=@Code";
             var parameters = new { Code = code };
             return (dbConnection.QueryFirstOrDefault<District>(sql, parameters, transaction: await GetDbTransactionAsync()));
+        }
+
+        public async Task<List<District>> GetByProvinceCodeAsync(int ProvinceCode)
+        {
+            var dbConnection = await GetDbConnectionAsync();
+            var sql = @"SELECT * FROM District WHERE ProvinceCode=@provinceCode";
+            var parameters = new { provinceCode = ProvinceCode };
+            return (await dbConnection.QueryAsync<District>(sql, parameters, transaction: await GetDbTransactionAsync())).ToList();
         }
     }
 }

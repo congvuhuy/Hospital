@@ -1,27 +1,46 @@
+<div class="upload-container">
+  <form nz-form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+    <div class="upload-section">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="provinceFile">Tải lên tệp Excel của tỉnh</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input type="file" (change)="onFileChange($event)" nz-input formControlName="provinceFile"/>
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button nzType="primary" (click)="uploadProvinceFile()">Tải lên Tỉnh</button>
+    </div>
+  </form>
+</div>
+
 <nz-table
   #provinceTable
           [nzData]="provinces"
-          [nzFrontPagination]="true"
+          [nzFrontPagination]="false"
           [nzTotal]="total"
           [nzPageSize]="pageSize"
-          [(nzPageIndex)]="pageIndex">
-<!--          (nzPageIndexChange)="onPageIndexChange($event)">-->
+          [(nzPageIndex)]="pageIndex"
+          (nzPageIndexChange)="onPageIndexChange($event)">
   <thead>
   <tr>
-    <th nzWidth="25%">Stt</th>
-    <th nzWidth="25%">Mã</th>
-    <th nzWidth="50%">Tên tỉnh</th>
-    <th nzWidth="50%">Cấp</th>
-    <th nzWidth="50%">Thêm</th>
+    <th nzWidth="10%" >Stt</th>
+    <th nzWidth="10%">Mã</th>
+    <th nzWidth="35%">Tên tỉnh</th>
+    <th nzWidth="35%">Cấp</th>
+    <th nzWidth="10%">
+      <button nz-button nzType="link" nzShape="circle" nzBlock="true" (click)="createProvince()">Thêm</button>
+    </th>
 
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let province of provinceTable.data; let i=index">
-    <td>{{i +1}}</td>
+    <td>{{(pageIndex-1)*pageSize+i +1 }}</td>
     <td>{{ province.provinceCode }}</td>
     <td>{{ province.provinceName }}</td>
-    <td>{{ province.provinceType}}</td>
+    <td>
+      <span *ngIf="province.provinceType === 1">Tỉnh</span>
+      <span *ngIf="province.provinceType === 2">Thành phố trung ương</span>
+    </td>
     <td>
       <button nz-button nzType="link" (click)="editProvince(province)">Sửa</button>
       <button nz-button nzType="link" nzDanger (click)="deleteProvince(province.id)">Xóa</button>
@@ -30,19 +49,30 @@
   </tbody>
 </nz-table>
 
-<nz-modal [(nzVisible)]="isVisible" nzTitle="Sửa tỉnh" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="isVisible"  nzTitle="{{IsCreate ? 'Thêm' : 'Sửa' }}" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="provinceForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="provinceCode">Mã tỉnh</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="provinceCode"/>
+        </nz-form-control>
+      </nz-form-item>
+
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="provinceName">Tên tỉnh</nz-form-label>
         <nz-form-control [nzSpan]="14">
           <input nz-input formControlName="provinceName" />
         </nz-form-control>
       </nz-form-item>
+
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="provinceCode">Mã tỉnh</nz-form-label>
         <nz-form-control [nzSpan]="14">
-          <input nz-input formControlName="provinceCode"/>
+          <nz-select formControlName="provinceType" nzPlaceHolder="Chọn cấp tỉnh">
+            <nz-option *ngFor="let type of provinceTypes" [nzValue]="type.value" [nzLabel]="type.label">
+            </nz-option>
+          </nz-select>
         </nz-form-control>
       </nz-form-item>
     </form>

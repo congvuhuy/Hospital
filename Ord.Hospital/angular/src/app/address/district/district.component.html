@@ -1,0 +1,81 @@
+<nz-table
+  #districtTable
+  [nzData]="districts"
+  [nzFrontPagination]="false"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [(nzPageIndex)]="pageIndex"
+  (nzPageIndexChange)="onPageIndexChange($event)">
+  <thead>
+  <tr>
+    <th nzWidth="10%" >Stt</th>
+    <th nzWidth="10%">Mã</th>
+    <th nzWidth="25%">Tên xã</th>
+    <th nzWidth="25%">Cấp</th>
+    <th nzWidth="20%">Tên tỉnh</th>
+    <th nzWidth="10%">
+      <button nz-button nzType="link" nzShape="circle" nzBlock="true" (click)="createDistrict()">Thêm</button>
+    </th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let district of districtTable.data; let i=index">
+    <td>{{(pageIndex-1)*pageSize+i +1 }}</td>
+    <td>{{ district.districtCode }}</td>
+    <td>{{ district.districtName }}</td>
+    <td>
+      <span *ngIf="district.districtType === 1">Thị xã</span>
+      <span *ngIf="district.districtType === 2">Thành phố</span>
+      <span *ngIf="district.districtType === 3">Quận</span>
+      <span *ngIf="district.districtType === 4">Huyện</span>
+
+    </td>
+    <td>{{provinceMap[district.provinceCode]}}</td>
+    <td>
+      <button nz-button nzType="link" (click)="editDistrict(district)">Sửa</button>
+      <button nz-button nzType="link" nzDanger (click)="deleteDistrict(district.id)">Xóa</button>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="isVisible"  nzTitle="{{IsCreate ? 'Thêm' : 'Sửa' }}" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="districtForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="districtCode">Mã huyện</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="districtCode"/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="districtName">Tên huyện</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="districtName" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="districtCode">Cấp huyện</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select formControlName="districtType" nzPlaceHolder="Chọn cấp huyện">
+            <nz-option *ngFor="let type of districtTypes" [nzValue]="type.value" [nzLabel]="type.label">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="provinceCode">Chọn tỉnh</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select formControlName="provinceCode" nzPlaceHolder="Chọn tỉnh">
+            <nz-option *ngFor="let province of provinces" [nzValue]="province.provinceCode" [nzLabel]="province.provinceName">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

@@ -1702,18 +1702,27 @@
                   }
                 },
                 {
-                  "name": "GetFilterAsync",
+                  "name": "GetListPagingAsync",
                   "parametersOnMethod": [
                     {
-                      "name": "pageNumber",
-                      "typeAsString": "System.Int32, System.Private.CoreLib",
-                      "type": "System.Int32",
-                      "typeSimple": "number",
+                      "name": "input",
+                      "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                      "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
                       "isOptional": false,
                       "defaultValue": null
-                    },
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Communes.Dtos.CommuneDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Communes.Dtos.CommuneDto>"
+                  }
+                },
+                {
+                  "name": "getListByDistrictCode",
+                  "parametersOnMethod": [
                     {
-                      "name": "pageSize",
+                      "name": "districtCode",
                       "typeAsString": "System.Int32, System.Private.CoreLib",
                       "type": "System.Int32",
                       "typeSimple": "number",
@@ -1772,100 +1781,6 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<Ord.Hospital.Communes.Dtos.CommuneDto,Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto>"
             },
-            "CreateMultipleAsyncByCommuneList": {
-              "uniqueName": "CreateMultipleAsyncByCommuneList",
-              "name": "CreateMultipleAsync",
-              "httpMethod": "POST",
-              "url": "api/app/commune/multiple",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "communeList",
-                  "typeAsString": "System.Collections.Generic.List`1[[Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto, Ord.Hospital.Application.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib",
-                  "type": "System.Collections.Generic.List<Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto>",
-                  "typeSimple": "[Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto]",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "communeList",
-                  "name": "communeList",
-                  "jsonName": null,
-                  "type": "System.Collections.Generic.List<Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto>",
-                  "typeSimple": "[Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto]",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "System.Void",
-                "typeSimple": "System.Void"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Ord.Hospital.Communes.ICommuneService"
-            },
-            "GetFilterAsyncByPageNumberAndPageSize": {
-              "uniqueName": "GetFilterAsyncByPageNumberAndPageSize",
-              "name": "GetFilterAsync",
-              "httpMethod": "GET",
-              "url": "api/app/commune/filter",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "pageNumber",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null
-                },
-                {
-                  "name": "pageSize",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "pageNumber",
-                  "name": "pageNumber",
-                  "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
-                },
-                {
-                  "nameOnMethod": "pageSize",
-                  "name": "pageSize",
-                  "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "System.Collections.Generic.List<Ord.Hospital.Communes.Dtos.CommuneDto>",
-                "typeSimple": "[Ord.Hospital.Communes.Dtos.CommuneDto]"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Ord.Hospital.Communes.ICommuneService"
-            },
             "UpdateAsyncByIdAndInput": {
               "uniqueName": "UpdateAsyncByIdAndInput",
               "name": "UpdateAsync",
@@ -1922,6 +1837,141 @@
               },
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<Ord.Hospital.Communes.Dtos.CommuneDto,System.Int32,Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto>"
+            },
+            "CreateMultipleAsyncByCommuneList": {
+              "uniqueName": "CreateMultipleAsyncByCommuneList",
+              "name": "CreateMultipleAsync",
+              "httpMethod": "POST",
+              "url": "api/app/commune/multiple",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "communeList",
+                  "typeAsString": "System.Collections.Generic.List`1[[Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto, Ord.Hospital.Application.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib",
+                  "type": "System.Collections.Generic.List<Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto>",
+                  "typeSimple": "[Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto]",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "communeList",
+                  "name": "communeList",
+                  "jsonName": null,
+                  "type": "System.Collections.Generic.List<Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto>",
+                  "typeSimple": "[Ord.Hospital.Communes.Dtos.CreateUpdateCommuneDto]",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Communes.ICommuneService"
+            },
+            "GetListPagingAsyncByInput": {
+              "uniqueName": "GetListPagingAsyncByInput",
+              "name": "GetListPagingAsync",
+              "httpMethod": "GET",
+              "url": "api/app/commune/paging",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                  "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Communes.Dtos.CommuneDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Communes.Dtos.CommuneDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Communes.ICommuneService"
+            },
+            "getListByDistrictCodeByDistrictCode": {
+              "uniqueName": "getListByDistrictCodeByDistrictCode",
+              "name": "getListByDistrictCode",
+              "httpMethod": "GET",
+              "url": "api/app/commune/get-list-by-district-code",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "districtCode",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "districtCode",
+                  "name": "districtCode",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<Ord.Hospital.Communes.Dtos.CommuneDto>",
+                "typeSimple": "[Ord.Hospital.Communes.Dtos.CommuneDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Communes.ICommuneService"
             },
             "DeleteAsyncById": {
               "uniqueName": "DeleteAsyncById",
@@ -2073,28 +2123,20 @@
               "name": "IDistrictService",
               "methods": [
                 {
-                  "name": "GetFilterAsync",
+                  "name": "GetListPagingAsync",
                   "parametersOnMethod": [
                     {
-                      "name": "pageNumber",
-                      "typeAsString": "System.Int32, System.Private.CoreLib",
-                      "type": "System.Int32",
-                      "typeSimple": "number",
-                      "isOptional": false,
-                      "defaultValue": null
-                    },
-                    {
-                      "name": "pageSize",
-                      "typeAsString": "System.Int32, System.Private.CoreLib",
-                      "type": "System.Int32",
-                      "typeSimple": "number",
+                      "name": "input",
+                      "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                      "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
                       "isOptional": false,
                       "defaultValue": null
                     }
                   ],
                   "returnValue": {
-                    "type": "System.Collections.Generic.List<Ord.Hospital.Districts.Dtos.DistrictDto>",
-                    "typeSimple": "[Ord.Hospital.Districts.Dtos.DistrictDto]"
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Districts.Dtos.DistrictDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Districts.Dtos.DistrictDto>"
                   }
                 },
                 {
@@ -2110,8 +2152,8 @@
                     }
                   ],
                   "returnValue": {
-                    "type": "System.Collections.Generic.List<Ord.Hospital.Districts.Dtos.DistrictDto>",
-                    "typeSimple": "[Ord.Hospital.Districts.Dtos.DistrictDto]"
+                    "type": "Ord.Hospital.Districts.Dtos.DistrictDto",
+                    "typeSimple": "Ord.Hospital.Districts.Dtos.DistrictDto"
                   }
                 },
                 {
@@ -2129,6 +2171,23 @@
                   "returnValue": {
                     "type": "System.Void",
                     "typeSimple": "System.Void"
+                  }
+                },
+                {
+                  "name": "getListByProvinceCode",
+                  "parametersOnMethod": [
+                    {
+                      "name": "provinceCode",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<Ord.Hospital.Districts.Dtos.DistrictDto>",
+                    "typeSimple": "[Ord.Hospital.Districts.Dtos.DistrictDto]"
                   }
                 }
               ]
@@ -2234,46 +2293,38 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<Ord.Hospital.Districts.Dtos.DistrictDto,System.Int32,Ord.Hospital.Districts.Dtos.CreateUpdateDistrictDto>"
             },
-            "GetFilterAsyncByPageNumberAndPageSize": {
-              "uniqueName": "GetFilterAsyncByPageNumberAndPageSize",
-              "name": "GetFilterAsync",
+            "GetListPagingAsyncByInput": {
+              "uniqueName": "GetListPagingAsyncByInput",
+              "name": "GetListPagingAsync",
               "httpMethod": "GET",
-              "url": "api/app/district/filter",
+              "url": "api/app/district/paging",
               "supportedVersions": [],
               "parametersOnMethod": [
                 {
-                  "name": "pageNumber",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null
-                },
-                {
-                  "name": "pageSize",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                  "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
                   "isOptional": false,
                   "defaultValue": null
                 }
               ],
               "parameters": [
                 {
-                  "nameOnMethod": "pageNumber",
-                  "name": "pageNumber",
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
                   "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "type": "System.String",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,
                   "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
+                  "descriptorName": "input"
                 },
                 {
-                  "nameOnMethod": "pageSize",
-                  "name": "pageSize",
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
                   "jsonName": null,
                   "type": "System.Int32",
                   "typeSimple": "number",
@@ -2281,12 +2332,24 @@
                   "defaultValue": null,
                   "constraintTypes": null,
                   "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
                 }
               ],
               "returnValue": {
-                "type": "System.Collections.Generic.List<Ord.Hospital.Districts.Dtos.DistrictDto>",
-                "typeSimple": "[Ord.Hospital.Districts.Dtos.DistrictDto]"
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Districts.Dtos.DistrictDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Districts.Dtos.DistrictDto>"
               },
               "allowAnonymous": null,
               "implementFrom": "Ord.Hospital.Districts.IDistrictService"
@@ -2322,8 +2385,8 @@
                 }
               ],
               "returnValue": {
-                "type": "System.Collections.Generic.List<Ord.Hospital.Districts.Dtos.DistrictDto>",
-                "typeSimple": "[Ord.Hospital.Districts.Dtos.DistrictDto]"
+                "type": "Ord.Hospital.Districts.Dtos.DistrictDto",
+                "typeSimple": "Ord.Hospital.Districts.Dtos.DistrictDto"
               },
               "allowAnonymous": null,
               "implementFrom": "Ord.Hospital.Districts.IDistrictService"
@@ -2361,6 +2424,43 @@
               "returnValue": {
                 "type": "System.Void",
                 "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Districts.IDistrictService"
+            },
+            "getListByProvinceCodeByProvinceCode": {
+              "uniqueName": "getListByProvinceCodeByProvinceCode",
+              "name": "getListByProvinceCode",
+              "httpMethod": "GET",
+              "url": "api/app/district/get-list-by-province-code",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "provinceCode",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "provinceCode",
+                  "name": "provinceCode",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<Ord.Hospital.Districts.Dtos.DistrictDto>",
+                "typeSimple": "[Ord.Hospital.Districts.Dtos.DistrictDto]"
               },
               "allowAnonymous": null,
               "implementFrom": "Ord.Hospital.Districts.IDistrictService"
@@ -2753,6 +2853,312 @@
             }
           }
         },
+        "Ord.Hospital.Services.PatientService": {
+          "controllerName": "Patient",
+          "controllerGroupName": "Patient",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Ord.Hospital.Services.PatientService",
+          "interfaces": [
+            {
+              "type": "Ord.Hospital.Patients.IPatitentService",
+              "name": "IPatitentService",
+              "methods": [
+                {
+                  "name": "GetByHospitalID",
+                  "parametersOnMethod": [
+                    {
+                      "name": "HospitalID",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<Ord.Hospital.Patients.Dtos.PatientDto>",
+                    "typeSimple": "[Ord.Hospital.Patients.Dtos.PatientDto]"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Volo.Abp.DependencyInjection.IScopedDependency",
+              "name": "IScopedDependency",
+              "methods": []
+            }
+          ],
+          "actions": {
+            "GetByHospitalIDByHospitalID": {
+              "uniqueName": "GetByHospitalIDByHospitalID",
+              "name": "GetByHospitalID",
+              "httpMethod": "GET",
+              "url": "api/app/patient/by-hospital-iD",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "HospitalID",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "HospitalID",
+                  "name": "HospitalID",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<Ord.Hospital.Patients.Dtos.PatientDto>",
+                "typeSimple": "[Ord.Hospital.Patients.Dtos.PatientDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Patients.IPatitentService"
+            },
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/patient",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto, Ord.Hospital.Application.Contracts",
+                  "type": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto",
+                  "typeSimple": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto",
+                  "typeSimple": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Ord.Hospital.Patients.Dtos.PatientDto",
+                "typeSimple": "Ord.Hospital.Patients.Dtos.PatientDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<Ord.Hospital.Patients.Dtos.PatientDto,Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto>"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/app/patient/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto, Ord.Hospital.Application.Contracts",
+                  "type": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto",
+                  "typeSimple": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto",
+                  "typeSimple": "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Ord.Hospital.Patients.Dtos.PatientDto",
+                "typeSimple": "Ord.Hospital.Patients.Dtos.PatientDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<Ord.Hospital.Patients.Dtos.PatientDto,System.Int32,Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto>"
+            },
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/patient/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IDeleteAppService<System.Int32>"
+            },
+            "GetAsyncById": {
+              "uniqueName": "GetAsyncById",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/app/patient/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Ord.Hospital.Patients.Dtos.PatientDto",
+                "typeSimple": "Ord.Hospital.Patients.Dtos.PatientDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Ord.Hospital.Patients.Dtos.PatientDto,Ord.Hospital.Patients.Dtos.PatientDto,System.Int32,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            },
+            "GetListAsyncByInput": {
+              "uniqueName": "GetListAsyncByInput",
+              "name": "GetListAsync",
+              "httpMethod": "GET",
+              "url": "api/app/patient",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                  "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Patients.Dtos.PatientDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Patients.Dtos.PatientDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Ord.Hospital.Patients.Dtos.PatientDto,Ord.Hospital.Patients.Dtos.PatientDto,System.Int32,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            }
+          }
+        },
         "Ord.Hospital.Services.ProvinceService": {
           "controllerName": "Province",
           "controllerGroupName": "Province",
@@ -2783,28 +3189,20 @@
                   }
                 },
                 {
-                  "name": "GetFilterAll",
+                  "name": "GetListPagingAsync",
                   "parametersOnMethod": [
                     {
-                      "name": "pageNumber",
-                      "typeAsString": "System.Int32, System.Private.CoreLib",
-                      "type": "System.Int32",
-                      "typeSimple": "number",
-                      "isOptional": false,
-                      "defaultValue": null
-                    },
-                    {
-                      "name": "pageSize",
-                      "typeAsString": "System.Int32, System.Private.CoreLib",
-                      "type": "System.Int32",
-                      "typeSimple": "number",
+                      "name": "input",
+                      "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                      "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
                       "isOptional": false,
                       "defaultValue": null
                     }
                   ],
                   "returnValue": {
-                    "type": "System.Collections.Generic.List<Ord.Hospital.Provinces.Dtos.ProvinceDto>",
-                    "typeSimple": "[Ord.Hospital.Provinces.Dtos.ProvinceDto]"
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Provinces.Dtos.ProvinceDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Provinces.Dtos.ProvinceDto>"
                   }
                 },
                 {
@@ -2833,137 +3231,6 @@
             }
           ],
           "actions": {
-            "GetFilterAllByPageNumberAndPageSize": {
-              "uniqueName": "GetFilterAllByPageNumberAndPageSize",
-              "name": "GetFilterAll",
-              "httpMethod": "GET",
-              "url": "api/app/province/filter-all",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "pageNumber",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null
-                },
-                {
-                  "name": "pageSize",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "pageNumber",
-                  "name": "pageNumber",
-                  "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
-                },
-                {
-                  "nameOnMethod": "pageSize",
-                  "name": "pageSize",
-                  "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "System.Collections.Generic.List<Ord.Hospital.Provinces.Dtos.ProvinceDto>",
-                "typeSimple": "[Ord.Hospital.Provinces.Dtos.ProvinceDto]"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Ord.Hospital.Provinces.IProvinceService"
-            },
-            "GetByCodeByCode": {
-              "uniqueName": "GetByCodeByCode",
-              "name": "GetByCode",
-              "httpMethod": "GET",
-              "url": "api/app/province/by-code",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "code",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "code",
-                  "name": "code",
-                  "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "Ord.Hospital.Provinces.Dtos.ProvinceDto",
-                "typeSimple": "Ord.Hospital.Provinces.Dtos.ProvinceDto"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Ord.Hospital.Provinces.IProvinceService"
-            },
-            "CreateMultipleAsyncByInput": {
-              "uniqueName": "CreateMultipleAsyncByInput",
-              "name": "CreateMultipleAsync",
-              "httpMethod": "POST",
-              "url": "api/app/province/multiple",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "input",
-                  "typeAsString": "System.Collections.Generic.List`1[[Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto, Ord.Hospital.Application.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib",
-                  "type": "System.Collections.Generic.List<Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto>",
-                  "typeSimple": "[Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto]",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "input",
-                  "name": "input",
-                  "jsonName": null,
-                  "type": "System.Collections.Generic.List<Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto>",
-                  "typeSimple": "[Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto]",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "System.Void",
-                "typeSimple": "System.Void"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Ord.Hospital.Provinces.IProvinceService"
-            },
             "CreateAsyncByInput": {
               "uniqueName": "CreateAsyncByInput",
               "name": "CreateAsync",
@@ -3057,6 +3324,141 @@
               },
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<Ord.Hospital.Provinces.Dtos.ProvinceDto,System.Int32,Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto>"
+            },
+            "GetListPagingAsyncByInput": {
+              "uniqueName": "GetListPagingAsyncByInput",
+              "name": "GetListPagingAsync",
+              "httpMethod": "GET",
+              "url": "api/app/province/paging",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                  "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Provinces.Dtos.ProvinceDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Provinces.Dtos.ProvinceDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Provinces.IProvinceService"
+            },
+            "GetByCodeByCode": {
+              "uniqueName": "GetByCodeByCode",
+              "name": "GetByCode",
+              "httpMethod": "GET",
+              "url": "api/app/province/by-code",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "code",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "code",
+                  "name": "code",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Ord.Hospital.Provinces.Dtos.ProvinceDto",
+                "typeSimple": "Ord.Hospital.Provinces.Dtos.ProvinceDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Provinces.IProvinceService"
+            },
+            "CreateMultipleAsyncByInput": {
+              "uniqueName": "CreateMultipleAsyncByInput",
+              "name": "CreateMultipleAsync",
+              "httpMethod": "POST",
+              "url": "api/app/province/multiple",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "System.Collections.Generic.List`1[[Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto, Ord.Hospital.Application.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib",
+                  "type": "System.Collections.Generic.List<Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto>",
+                  "typeSimple": "[Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto]",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "System.Collections.Generic.List<Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto>",
+                  "typeSimple": "[Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto]",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Provinces.IProvinceService"
             },
             "DeleteAsyncById": {
               "uniqueName": "DeleteAsyncById",
@@ -3192,6 +3594,257 @@
               },
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Ord.Hospital.Provinces.Dtos.ProvinceDto,Ord.Hospital.Provinces.Dtos.ProvinceDto,System.Int32,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            }
+          }
+        },
+        "Ord.Hospital.Services.UserHospitalService": {
+          "controllerName": "UserHospital",
+          "controllerGroupName": "UserHospital",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Ord.Hospital.Services.UserHospitalService",
+          "interfaces": [
+            {
+              "type": "Ord.Hospital.UserHospitals.IUserHospitalService",
+              "name": "IUserHospitalService",
+              "methods": []
+            },
+            {
+              "type": "Volo.Abp.DependencyInjection.IScopedDependency",
+              "name": "IScopedDependency",
+              "methods": []
+            }
+          ],
+          "actions": {
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/user-hospital",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto, Ord.Hospital.Application.Contracts",
+                  "type": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto",
+                  "typeSimple": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto",
+                  "typeSimple": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Ord.Hospital.UserHospitals.Dtos.UserHospitalDto",
+                "typeSimple": "Ord.Hospital.UserHospitals.Dtos.UserHospitalDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<Ord.Hospital.UserHospitals.Dtos.UserHospitalDto,Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto>"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/app/user-hospital/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto, Ord.Hospital.Application.Contracts",
+                  "type": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto",
+                  "typeSimple": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto",
+                  "typeSimple": "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Ord.Hospital.UserHospitals.Dtos.UserHospitalDto",
+                "typeSimple": "Ord.Hospital.UserHospitals.Dtos.UserHospitalDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<Ord.Hospital.UserHospitals.Dtos.UserHospitalDto,System.Int32,Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto>"
+            },
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/user-hospital/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IDeleteAppService<System.Int32>"
+            },
+            "GetAsyncById": {
+              "uniqueName": "GetAsyncById",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/app/user-hospital/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Ord.Hospital.UserHospitals.Dtos.UserHospitalDto",
+                "typeSimple": "Ord.Hospital.UserHospitals.Dtos.UserHospitalDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Ord.Hospital.UserHospitals.Dtos.UserHospitalDto,Ord.Hospital.UserHospitals.Dtos.UserHospitalDto,System.Int32,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            },
+            "GetListAsyncByInput": {
+              "uniqueName": "GetListAsyncByInput",
+              "name": "GetListAsync",
+              "httpMethod": "GET",
+              "url": "api/app/user-hospital",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                  "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.UserHospitals.Dtos.UserHospitalDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.UserHospitals.Dtos.UserHospitalDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Ord.Hospital.UserHospitals.Dtos.UserHospitalDto,Ord.Hospital.UserHospitals.Dtos.UserHospitalDto,System.Int32,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
             }
           }
         }
@@ -10979,6 +11632,239 @@
         }
       ]
     },
+    "Ord.Hospital.Patients.Dtos.PatientDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "Id",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "PatientName",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "ProvinceCode",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "DistrictCode",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "CommuneCode",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Address",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "HospitalID",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Ord.Hospital.Patients.Dtos.CreateUpdatePatientDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "PatientName",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "ProvinceCode",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "DistrictCode",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "CommuneCode",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Address",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "HospitalID",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "ProvinceName",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "ProvinceCode",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "ProvinceType",
+          "jsonName": null,
+          "type": "Ord.Hospital.AddressType.ProvinceType",
+          "typeSimple": "Ord.Hospital.AddressType.ProvinceType",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Ord.Hospital.AddressType.ProvinceType": {
+      "baseType": "System.Enum",
+      "isEnum": true,
+      "enumNames": [
+        "tinh",
+        "thanhphotrunguong"
+      ],
+      "enumValues": [
+        1,
+        2
+      ],
+      "genericArguments": null,
+      "properties": null
+    },
     "Ord.Hospital.Provinces.Dtos.ProvinceDto": {
       "baseType": null,
       "isEnum": false,
@@ -11060,21 +11946,7 @@
         }
       ]
     },
-    "Ord.Hospital.AddressType.ProvinceType": {
-      "baseType": "System.Enum",
-      "isEnum": true,
-      "enumNames": [
-        "tinh",
-        "thanhphotrunguong"
-      ],
-      "enumValues": [
-        1,
-        2
-      ],
-      "genericArguments": null,
-      "properties": null
-    },
-    "Ord.Hospital.Provinces.Dtos.CreateUpdateProvinceDto": {
+    "Ord.Hospital.UserHospitals.Dtos.CreateUpdateUserHospitalDto": {
       "baseType": null,
       "isEnum": false,
       "enumNames": null,
@@ -11082,9 +11954,9 @@
       "genericArguments": null,
       "properties": [
         {
-          "name": "ProvinceName",
+          "name": "UserID",
           "jsonName": null,
-          "type": "System.String",
+          "type": "System.Guid",
           "typeSimple": "string",
           "isRequired": false,
           "minLength": null,
@@ -11094,7 +11966,7 @@
           "regex": null
         },
         {
-          "name": "ProvinceCode",
+          "name": "HospitalID",
           "jsonName": null,
           "type": "System.Int32",
           "typeSimple": "number",
@@ -11104,12 +11976,33 @@
           "minimum": null,
           "maximum": null,
           "regex": null
+        }
+      ]
+    },
+    "Ord.Hospital.UserHospitals.Dtos.UserHospitalDto": {
+      "baseType": "Volo.Abp.Application.Dtos.AuditedEntityDto<System.Int32>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "UserID",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
         },
         {
-          "name": "ProvinceType",
+          "name": "HospitalID",
           "jsonName": null,
-          "type": "Ord.Hospital.AddressType.ProvinceType",
-          "typeSimple": "Ord.Hospital.AddressType.ProvinceType",
+          "type": "System.Int32",
+          "typeSimple": "number",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
@@ -11118,6 +12011,107 @@
           "regex": null
         }
       ]
+    },
+    "Volo.Abp.Application.Dtos.AuditedEntityDto<T0>": {
+      "baseType": "Volo.Abp.Application.Dtos.CreationAuditedEntityDto<TPrimaryKey>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": [
+        "TPrimaryKey"
+      ],
+      "properties": [
+        {
+          "name": "LastModificationTime",
+          "jsonName": null,
+          "type": "System.DateTime?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "LastModifierId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Volo.Abp.Application.Dtos.CreationAuditedEntityDto<T0>": {
+      "baseType": "Volo.Abp.Application.Dtos.EntityDto<TPrimaryKey>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": [
+        "TPrimaryKey"
+      ],
+      "properties": [
+        {
+          "name": "CreationTime",
+          "jsonName": null,
+          "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "CreatorId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Volo.Abp.Application.Dtos.EntityDto<T0>": {
+      "baseType": "Volo.Abp.Application.Dtos.EntityDto",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": [
+        "TKey"
+      ],
+      "properties": [
+        {
+          "name": "Id",
+          "jsonName": null,
+          "type": "TKey",
+          "typeSimple": "TKey",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Volo.Abp.Application.Dtos.EntityDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": []
     }
   }
 }

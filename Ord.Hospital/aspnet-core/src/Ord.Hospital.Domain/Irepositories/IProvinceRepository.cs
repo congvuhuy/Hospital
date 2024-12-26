@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.DependencyInjection;
 
 namespace Ord.Hospital.Irepositories
 {
-    public interface IProvinceRepository
+    public interface IProvinceRepository :ITransientDependency
     {
-        Task<List<Province>> GetAllAsync(int pageNumber, int pageSize);
+        public Task<List<Province>> GetPagedProvincesAsync(int SkipCount,int MaxResultCount, string Sorting);
+        public Task<int> GetTotalCountAsync();
         Task<Province> GetByCodeAsync(int code);
     }
 }

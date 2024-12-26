@@ -3,7 +3,9 @@ using Ord.Hospital.Communes.Dtos;
 using Ord.Hospital.Districts.Dtos;
 using Ord.Hospital.Enities;
 using Ord.Hospital.HospitalOrd.Dtos;
+using Ord.Hospital.Patients.Dtos;
 using Ord.Hospital.Provinces.Dtos;
+using Ord.Hospital.UserHospitals.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +40,14 @@ namespace Ord.Hospital.Mapping
             //Hospital
             CreateMap<CreateUpdateHospitalDto, Hospitals>();
             CreateMap<Hospitals, HospitalDto>();
+
             //Patient
+            CreateMap<CreateUpdatePatientDto, Patient>();
+            CreateMap<Patient, PatientDto>();
+
+            //UserHospital
+            CreateMap<CreateUpdateUserHospitalDto, UserHospital>();
+            CreateMap<UserHospital, UserHospitalDto>();
         }
     }
 }

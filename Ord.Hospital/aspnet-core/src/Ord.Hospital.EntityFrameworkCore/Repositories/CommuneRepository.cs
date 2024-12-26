@@ -19,17 +19,28 @@ namespace Ord.Hospital.Repositories
         {
         }
 
-        public async Task<List<Commune>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<List<Commune>> GetPagedCommunesAsync(int SkipCount, int MaxResultCount, string Sorting)
+        {
+            {
+                var dbConnection = await GetDbConnectionAsync();
+                var sql = $@" 
+                        SELECT * 
+                        FROM Commune
+                        WHERE IsDeleted=false
+                        ORDER BY {Sorting ?? "Id"} 
+                        LIMIT @MaxResultCount 
+                        OFFSET @SkipCount";
+
+                var parameters = new { SkipCount, MaxResultCount };
+                return (await dbConnection.QueryAsync<Commune>(sql, parameters)).ToList();
+
+            }
+        }
+        public async Task<int> GetTotalCountAsync()
         {
             var dbConnection = await GetDbConnectionAsync();
-            var sql = @"SELECT * FROM Commune ORDER BY CommuneCode LIMIT @PageSize OFFSET @Offset;";
-            var parameters = new
-            {
-                Offset = (pageNumber - 1) * pageSize,
-                PageSize = pageSize
-            };
-
-            return (await dbConnection.QueryAsync<Commune>(sql, parameters, transaction: await GetDbTransactionAsync())).ToList();
+            var sql = "SELECT COUNT(1) FROM Commune";
+            return await dbConnection.ExecuteScalarAsync<int>(sql);
         }
 
         public async Task<Commune> GetByCodeAsync(int code)
@@ -40,6 +51,12 @@ namespace Ord.Hospital.Repositories
             return (await dbConnection.QueryFirstOrDefaultAsync<Commune>(sql, parameters, transaction: await GetDbTransactionAsync()));
         }
 
-
+        public async Task<List<Commune>> GetByDistrictCodeAsync(int DistrictCode)
+        {
+            var dbConnection = await GetDbConnectionAsync();
+            var sql = @"SELECT * FROM Commune WHERE DistrictCode=@districtCode";
+            var parameters = new { districtCode = DistrictCode };
+            return (await dbConnection.QueryAsync<Commune>(sql, parameters, transaction: await GetDbTransactionAsync())).ToList();
+        }
     }
 }

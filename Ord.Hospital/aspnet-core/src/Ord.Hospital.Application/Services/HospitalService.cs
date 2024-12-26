@@ -66,5 +66,37 @@ namespace Ord.Hospital.Services
             }
 
         }
+        public override async Task<HospitalDto> UpdateAsync(int id,CreateUpdateHospitalDto input)
+        {
+            try
+            {
+
+                var communeCode = await _communeRepository.GetByCodeAsync(input.CommuneCode);
+
+                if (communeCode == null)
+                {
+                    throw new AbpValidationException("Mã xã không tồn tại",
+                        new List<ValidationResult> { new ValidationResult("Mã xã không tồn tại") });
+                }
+                if (input.DistrictCode != communeCode.DistrictCode)
+                {
+                    throw new AbpValidationException("Huyện không có xã này",
+                        new List<ValidationResult> { new ValidationResult("Huyện không có xã này") });
+                }
+                if (input.ProvinceCode != communeCode.ProvinceCode)
+                {
+                    throw new AbpValidationException("Tỉnh bạn chọn không tồn tại xã này",
+                        new List<ValidationResult> { new ValidationResult("Tỉnh bạn chọn không tồn tại này") });
+                }
+
+                return await base.UpdateAsync(id,input);
+            }
+            catch (Exception ex)
+            {
+                throw new AbpValidationException(ex.Message,
+                        new List<ValidationResult> { new ValidationResult(ex.Message) });
+            }
+
+        }
     }
 }

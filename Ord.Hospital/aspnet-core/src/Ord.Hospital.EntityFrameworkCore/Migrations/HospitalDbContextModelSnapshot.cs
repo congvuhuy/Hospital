@@ -204,7 +204,7 @@ namespace Ord.Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("CommnuneCode")
+                    b.Property<int>("CommuneCode")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
@@ -226,7 +226,7 @@ namespace Ord.Hospital.Migrations
                     b.Property<int>("DistrictCode")
                         .HasColumnType("int");
 
-                    b.Property<int>("HopitalID")
+                    b.Property<int>("HospitalID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -248,7 +248,7 @@ namespace Ord.Hospital.Migrations
                         .HasMaxLength(70)
                         .HasColumnType("varchar(70)");
 
-                    b.Property<int>("ProcevinCode")
+                    b.Property<int>("ProvinceCode")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -347,8 +347,8 @@ namespace Ord.Hospital.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
