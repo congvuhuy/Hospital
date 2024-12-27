@@ -152,7 +152,7 @@ export class ProvinceComponent implements OnInit{
       this.excelImportService.importProvinceExcelByFile(formData).subscribe(
         res => {
           alert('Tải lên tệp Excel của tỉnh thành công');
-          this.loadList(); // Refresh the list after successful uploadc
+          this.loadList();
         },
         err => {
          alert('Lỗi khi tải lên tệp Excel của tỉnh');

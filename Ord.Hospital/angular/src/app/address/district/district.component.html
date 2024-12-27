@@ -1,3 +1,17 @@
+<div class="upload-container">
+  <form nz-form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+    <div class="upload-section">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="districtFile">Tải lên tệp Excel của huyện</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input type="file" (change)="onFileChange($event)" nz-input formControlName="districtFile"/>
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button nzType="primary" (click)="uploadDistrictFile()">Tải lên Huyện</button>
+    </div>
+  </form>
+</div>
+
 <nz-table
   #districtTable
   [nzData]="districts"

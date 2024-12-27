@@ -18,6 +18,7 @@ import { DistrictService, ProvinceService } from '@proxy/services';
 import { CreateUpdateDistrictDto, DistrictDto } from '@proxy/districts/dtos';
 import { NzInputDirective } from 'ng-zorro-antd/input';
 import { ProvinceDto } from '@proxy/provinces/dtos';
+import { ExcelImportService } from '@proxy/controllers';
 
 @Component({
   selector: 'app-district',
@@ -78,7 +79,9 @@ export class DistrictComponent implements OnInit {
   districtForm: any;
   // huyen duoc chon de sua
   selectedDistrict: DistrictDto | undefined;
-  constructor(private districtService:DistrictService,private provinceService:ProvinceService,private fb: FormBuilder) {
+  uploadForm: any;
+  selectedFile:  File | null = null;
+  constructor(private districtService:DistrictService,private provinceService:ProvinceService,private excelImportService: ExcelImportService,private fb: FormBuilder) {
     this.requestDto = { sorting: 'ProvinceCode', skipCount: 0, maxResultCount:this.pageSize};
     this.requestFullDto = {sorting: '', skipCount: 0, maxResultCount:1000};
   }
@@ -92,6 +95,7 @@ export class DistrictComponent implements OnInit {
     });
     this.loadList()
     this.loadListProvince()
+    this.uploadForm = this.fb.group({ districtFile: [null, [Validators.required]] });
   }
   loadList(){
     this.districtService.getListPaging(this.requestDto).subscribe(
@@ -178,5 +182,33 @@ export class DistrictComponent implements OnInit {
     this.requestDto.skipCount = (newPageIndex - 1) * this.pageSize;
     this.loadList();
     console.log('PageIndex:', this.pageIndex, 'PageSize:', this.pageSize, 'Total:', this.total);
+  }
+
+  onSubmit() {
+
+  }
+
+  onFileChange(event) {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+      this.uploadForm.patchValue({ provinceFile: this.selectedFile });
+    }
+  }
+
+  uploadDistrictFile() {
+    if (this.uploadForm.valid && this.selectedFile) {
+      const formData: FormData = new FormData ();
+      formData.append('file', this.selectedFile);
+      this.excelImportService.importDistrictExcelByFile(formData).subscribe(
+        res => {
+          alert('Tải lên tệp Excel của tỉnh thành công');
+          this.loadList();
+        },
+        err => {
+          alert('Lỗi khi tải lên tệp Excel của tỉnh');
+          console.error(err);
+        }
+      );
+    }
   }
 }

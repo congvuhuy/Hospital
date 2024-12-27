@@ -35,20 +35,20 @@ export class PatientService {
     { apiName: this.apiName,...config });
   
 
-  getByHospitalIDByHospitalID = (HospitalID: number, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PatientDto[]>({
-      method: 'GET',
-      url: '/api/app/patient/by-hospital-iD',
-      params: { hospitalID: HospitalID },
-    },
-    { apiName: this.apiName,...config });
-  
-
   getList = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<PatientDto>>({
       method: 'GET',
       url: '/api/app/patient',
       params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+    },
+    { apiName: this.apiName,...config });
+  
+
+  getListPaging = (input: PagedAndSortedResultRequestDto, UserID: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, PagedResultDto<PatientDto>>({
+      method: 'GET',
+      url: '/api/app/patient/paging',
+      params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount, userID: UserID },
     },
     { apiName: this.apiName,...config });
   

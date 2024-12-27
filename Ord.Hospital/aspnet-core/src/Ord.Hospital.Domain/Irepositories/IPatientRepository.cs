@@ -10,6 +10,7 @@ namespace Ord.Hospital.Irepositories
 {
     public interface IPatientRepository:ITransientDependency
     {
-        public Task<List<Patient>> GetByHospitalID(int hospitalID);
+        public Task<List<Patient>> GetListByUserID(int SkipCount, int MaxResultCount, string Sorting, Guid UserID);
+        public Task<int> GetTotalCountAsync(Guid userID);
     }
 }

@@ -6,6 +6,7 @@ export interface CreateUpdateUserHospitalDto {
 }
 
 export interface UserHospitalDto extends AuditedEntityDto<number> {
+  id: number;
   userID?: string;
   hospitalID: number;
 }

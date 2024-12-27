@@ -45,6 +45,25 @@ function configureRoutes(routesService: RoutesService) {
         iconClass: 'fas fa-home',
         layout: eLayoutType.application,
       },
+
+      {
+        path: '/hospital',
+        name: 'hospital',
+        iconClass: 'fas fa-book',
+        layout: eLayoutType.application,
+      },
+      {
+        path: '/patient',
+        name: 'patient',
+        iconClass: 'fas fa-phone',
+        layout: eLayoutType.application,
+      },
+      {
+        path: '/user-hospital',
+        name: 'user-hospital',
+        iconClass: 'fas fa-pen',
+        layout: eLayoutType.application,
+      },
     ]);
   };
 }

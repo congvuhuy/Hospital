@@ -29,7 +29,22 @@ const routes: Routes = [
     path:'address',
     loadChildren:()=>
       import('./address/address.module').then(m=>m.AddressModule)
-  }
+  },
+  {
+    path:'patient',
+    loadChildren:()=>
+      import('./patient/patient.module').then(m=>m.PatientModule)
+  },
+  {
+    path:'hospital',
+    loadChildren:()=>
+      import('./hospital/hospital.module').then(m=>m.HospitalModule)
+  },
+  {
+    path:'user-hospital',
+    loadChildren:()=>
+      import('./user-hospital/user-hospital.module').then(m=>m.UserHospitalModule)
+  },
 ];
 
 @NgModule({

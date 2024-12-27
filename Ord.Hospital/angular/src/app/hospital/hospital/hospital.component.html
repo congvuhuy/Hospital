@@ -1,1 +1,88 @@
-<p>hospital works!</p>
+<nz-table
+  #hospitalTable
+  [nzData]="hospitals"
+  [nzFrontPagination]="false"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [(nzPageIndex)]="pageIndex"
+  (nzPageIndexChange)="onPageIndexChange($event)">
+  <thead>
+  <tr>
+    <th nzWidth="10%" >Stt</th>
+    <th nzWidth="10%">Tên bệnh viện</th>
+    <th nzWidth="15%">Địa chỉ</th>
+    <th nzWidth="15%">Tên xã</th>
+
+    <th nzWidth="20%">Tên huyện</th>
+    <th nzWidth="20%">Tên tỉnh</th>
+    <th nzWidth="10%">
+      <button nz-button nzType="link" nzShape="circle" nzBlock="true" (click)="createHospital()">Thêm</button>
+    </th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let hospital of hospitalTable.data; let i=index">
+    <td>{{(pageIndex-1)*pageSize+i +1 }}</td>
+    <td>{{ hospital.hospitalName }}</td>
+    <td>{{ hospital.address }}</td>
+    <td>{{communeMap[hospital.communeCode]}}</td>
+    <td>{{districtMap[hospital.districtCode]}}</td>
+    <td>{{provinceMap[hospital.provinceCode]}}</td>
+    <td>
+      <button nz-button nzType="link" (click)="editHospital(hospital)">Sửa</button>
+      <button nz-button nzType="link" nzDanger (click)="deleteHospital(hospital.id)">Xóa</button>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="isVisible"  nzTitle="{{IsCreate ? 'Thêm' : 'Sửa' }}" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="hospitalForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="hospitalName">Tên bệnh viện</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="hospitalName"/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="address">Địa chỉ</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="address" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="communeCode">Chọn xã</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select formControlName="communeCode" nzPlaceHolder="Chọn huyện">
+            <nz-option *ngFor="let commune of communesByDistrict" [nzValue]="commune.communeCode" [nzLabel]="commune.communeName">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="districtCode">Chọn huyện</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select formControlName="districtCode" nzPlaceHolder="Chọn huyện">
+            <nz-option *ngFor="let district of districtsByProvince" [nzValue]="district.districtCode" [nzLabel]="district.districtName">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="provinceCode">Chọn tỉnh</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select formControlName="provinceCode" nzPlaceHolder="Chọn tỉnh">
+            <nz-option *ngFor="let province of provinces" [nzValue]="province.provinceCode" [nzLabel]="province.provinceName">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

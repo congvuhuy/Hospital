@@ -1,3 +1,17 @@
+<div class="upload-container">
+  <form nz-form [formGroup]="uploadForm">
+    <div class="upload-section">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="communeFile">Tải lên tệp Excel của Xã</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input type="file" (change)="onFileChange($event)" nz-input formControlName="communeFile"/>
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button nzType="primary" (click)="uploadCommuneFile()">Tải lên Xã</button>
+    </div>
+  </form>
+</div>
+
 <nz-table
   #communeTable
   [nzData]="communes"

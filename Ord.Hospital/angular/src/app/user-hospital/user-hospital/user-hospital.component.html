@@ -1,0 +1,49 @@
+<nz-table
+  #userHospitalTable
+  [nzData]="usersHospitals"
+  [nzFrontPagination]="false"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [(nzPageIndex)]="pageIndex"
+  (nzPageIndexChange)="onPageIndexChange($event)">
+  <thead>
+  <tr>
+    <th nzWidth="10%" >Stt</th>
+    <th nzWidth="10%">Tên người dùng</th>
+    <th nzWidth="15%">Bệnh viện hoạt động</th>
+    <th nzWidth="10%">
+      <button nz-button nzType="link" nzShape="circle" nzBlock="true" (click)="createUsersHospital()">Thêm</button>
+    </th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let usersHospital of userHospitalTable.data; let i=index">
+    <td>{{(pageIndex-1)*pageSize+i +1 }}</td>
+    <td>{{usersMap[usersHospital.userID]}}</td>
+    <td>{{hospitalMap[usersHospital.hospitalID]}}</td>
+    <td>
+      <button nz-button nzType="link" (click)="editUserHospital(usersHospital)">Sửa</button>
+      <button nz-button nzType="link" nzDanger (click)="deleteUserHospital(usersHospital.id)">Xóa</button>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="isVisible"  nzTitle="{{IsCreate ? 'Thêm' : 'Sửa' }}" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="userHospitalForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="hospitalID">Bệnh viện làm việc</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select formControlName="hospitalID" nzPlaceHolder="chọn bện viện">
+            <nz-option *ngFor="let hospital of hospitals" [nzValue]="hospital.id" [nzLabel]="hospital.hospitalName" disabled>
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+
+    </form>
+  </ng-container>
+</nz-modal>

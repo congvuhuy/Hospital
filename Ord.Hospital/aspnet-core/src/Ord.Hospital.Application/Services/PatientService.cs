@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -32,8 +33,8 @@ namespace Ord.Hospital.Services
         private readonly IDistrictRepository _districtRepository;
         private readonly ICommuneRepository _communeRepository;
         private readonly IHospitalService _hospitalService;
-        public PatientService(IPatientRepository patientRepository, IMapper mapper,IRepository<Patient,int> repository,
-            IProvinceRepository provinceRepository, IDistrictRepository districtRepository, ICommuneRepository communeRepository) :base(repository)
+        public PatientService(IPatientRepository patientRepository, IMapper mapper, IRepository<Patient, int> repository,
+            IProvinceRepository provinceRepository, IDistrictRepository districtRepository, ICommuneRepository communeRepository) : base(repository)
         {
             _patientRepository = patientRepository;
             _mapper = mapper;
@@ -41,10 +42,18 @@ namespace Ord.Hospital.Services
             _provinceRepository = provinceRepository;
             _communeRepository = communeRepository;
         }
-        public async Task<List<PatientDto>> GetByHospitalID(int HospitalID)
+        public async Task<PagedResultDto<PatientDto>> GetListPagingAsync(PagedAndSortedResultRequestDto input, Guid UserID)
         {
-            var patients = await _patientRepository.GetByHospitalID(HospitalID);
-            return _mapper.Map<List<PatientDto>>(patients);
+            var totalCount = await _patientRepository.GetTotalCountAsync(UserID);
+            var patients = await _patientRepository.GetListByUserID(input.SkipCount, input.MaxResultCount, input.Sorting, UserID);
+
+            var patientDtos = _mapper.Map<List<Patient>, List<PatientDto>>(patients);
+
+            return new PagedResultDto<PatientDto>
+            {
+                TotalCount = totalCount,
+                Items = patientDtos
+            };
         }
         public override async Task<PatientDto> CreateAsync(CreateUpdatePatientDto input)
         {
@@ -109,5 +118,6 @@ namespace Ord.Hospital.Services
 
         }
 
+       
     }
 }

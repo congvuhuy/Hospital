@@ -91,7 +91,7 @@ namespace Ord.Hospital.Services
                 {
 
                     var districtCode = int.Parse(worksheet.Cells[row, 1].Text);
-                    var districtbyCode=_districtService.GetByCode(districtCode);
+                    var districtbyCode= await _districtService.GetByCode(districtCode);
                         if (districtbyCode != null) { 
                             throw new Exception($"Mã huyện {districtCode} dòng {row} đã tồn tại.");
                         }
@@ -141,7 +141,7 @@ namespace Ord.Hospital.Services
                 for (int row = 2; row <= 2000; row++)
                 {
                         var communeCode = int.Parse(worksheet.Cells[row, 1].Text);
-                        var communebyCode = _provinceService.GetByCode(communeCode);
+                        var communebyCode = await _communeService.GetByCode(communeCode);
                         if (communebyCode != null)
                         {
                             throw new Exception($"Mã xã {communeCode} dòng {row} đã tồn tại.");

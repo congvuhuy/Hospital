@@ -1734,6 +1734,23 @@
                     "type": "System.Collections.Generic.List<Ord.Hospital.Communes.Dtos.CommuneDto>",
                     "typeSimple": "[Ord.Hospital.Communes.Dtos.CommuneDto]"
                   }
+                },
+                {
+                  "name": "GetByCode",
+                  "parametersOnMethod": [
+                    {
+                      "name": "code",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Ord.Hospital.Communes.Dtos.CommuneDto",
+                    "typeSimple": "Ord.Hospital.Communes.Dtos.CommuneDto"
+                  }
                 }
               ]
             },
@@ -1969,6 +1986,43 @@
               "returnValue": {
                 "type": "System.Collections.Generic.List<Ord.Hospital.Communes.Dtos.CommuneDto>",
                 "typeSimple": "[Ord.Hospital.Communes.Dtos.CommuneDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Ord.Hospital.Communes.ICommuneService"
+            },
+            "GetByCodeByCode": {
+              "uniqueName": "GetByCodeByCode",
+              "name": "GetByCode",
+              "httpMethod": "GET",
+              "url": "api/app/commune/by-code",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "code",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "code",
+                  "name": "code",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Ord.Hospital.Communes.Dtos.CommuneDto",
+                "typeSimple": "Ord.Hospital.Communes.Dtos.CommuneDto"
               },
               "allowAnonymous": null,
               "implementFrom": "Ord.Hospital.Communes.ICommuneService"
@@ -2866,20 +2920,28 @@
               "name": "IPatitentService",
               "methods": [
                 {
-                  "name": "GetByHospitalID",
+                  "name": "GetListPagingAsync",
                   "parametersOnMethod": [
                     {
-                      "name": "HospitalID",
-                      "typeAsString": "System.Int32, System.Private.CoreLib",
-                      "type": "System.Int32",
-                      "typeSimple": "number",
+                      "name": "input",
+                      "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                      "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "UserID",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
                       "isOptional": false,
                       "defaultValue": null
                     }
                   ],
                   "returnValue": {
-                    "type": "System.Collections.Generic.List<Ord.Hospital.Patients.Dtos.PatientDto>",
-                    "typeSimple": "[Ord.Hospital.Patients.Dtos.PatientDto]"
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Patients.Dtos.PatientDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Patients.Dtos.PatientDto>"
                   }
                 }
               ]
@@ -2891,29 +2953,73 @@
             }
           ],
           "actions": {
-            "GetByHospitalIDByHospitalID": {
-              "uniqueName": "GetByHospitalIDByHospitalID",
-              "name": "GetByHospitalID",
+            "GetListPagingAsyncByInputAndUserID": {
+              "uniqueName": "GetListPagingAsyncByInputAndUserID",
+              "name": "GetListPagingAsync",
               "httpMethod": "GET",
-              "url": "api/app/patient/by-hospital-iD",
+              "url": "api/app/patient/paging",
               "supportedVersions": [],
               "parametersOnMethod": [
                 {
-                  "name": "HospitalID",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                  "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "UserID",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null
                 }
               ],
               "parameters": [
                 {
-                  "nameOnMethod": "HospitalID",
-                  "name": "HospitalID",
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
                   "jsonName": null,
                   "type": "System.Int32",
                   "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "UserID",
+                  "name": "UserID",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,
@@ -2922,8 +3028,8 @@
                 }
               ],
               "returnValue": {
-                "type": "System.Collections.Generic.List<Ord.Hospital.Patients.Dtos.PatientDto>",
-                "typeSimple": "[Ord.Hospital.Patients.Dtos.PatientDto]"
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Patients.Dtos.PatientDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Ord.Hospital.Patients.Dtos.PatientDto>"
               },
               "allowAnonymous": null,
               "implementFrom": "Ord.Hospital.Patients.IPatitentService"
@@ -11986,6 +12092,18 @@
       "enumValues": null,
       "genericArguments": null,
       "properties": [
+        {
+          "name": "Id",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
         {
           "name": "UserID",
           "jsonName": null,

@@ -7,6 +7,7 @@ namespace Ord.Hospital.UserHospitals.Dtos
 {
     public class UserHospitalDto:AuditedEntityDto<int>
     {
+        public int Id {  get; set; }
         public Guid UserID { get; set; }
         public int HospitalID { get; set; }
     }

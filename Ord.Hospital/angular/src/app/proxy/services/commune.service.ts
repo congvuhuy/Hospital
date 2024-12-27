@@ -44,6 +44,15 @@ export class CommuneService {
     { apiName: this.apiName,...config });
   
 
+  getByCodeByCode = (code: number, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, CommuneDto>({
+      method: 'GET',
+      url: '/api/app/commune/by-code',
+      params: { code },
+    },
+    { apiName: this.apiName,...config });
+  
+
   getList = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<CommuneDto>>({
       method: 'GET',

@@ -13,6 +13,6 @@ namespace Ord.Hospital.Communes
         Task CreateMultipleAsync(List<CreateUpdateCommuneDto> communeList);
         public Task<PagedResultDto<CommuneDto>> GetListPagingAsync(PagedAndSortedResultRequestDto input);
         public Task<List<CommuneDto>> getListByDistrictCode(int  districtCode);
-
+        public Task<CommuneDto> GetByCode(int code);
     }
 }

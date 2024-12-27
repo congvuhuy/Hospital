@@ -129,5 +129,11 @@ namespace Ord.Hospital.Services
             var communeByProvinceCode = await _communeRepository.GetByDistrictCodeAsync(districtCode);
             return _mapper.Map<List<CommuneDto>>(communeByProvinceCode);
         }
+
+        public async Task<CommuneDto> GetByCode(int code)
+        {
+            var commune = await _communeRepository.GetByCodeAsync(code);
+            return _mapper.Map<CommuneDto>(commune);
+        }
     }
 }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.Dapper;
 using Volo.Abp.EntityFrameworkCore;
+using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 
 namespace Ord.Hospital.Repositories
 {
@@ -18,13 +19,37 @@ namespace Ord.Hospital.Repositories
         {
 
         }
-        public async Task<List<Patient>> GetByHospitalID(int hospitalID)
+        public async Task<List<Patient>> GetListByUserID(int SkipCount, int MaxResultCount, string Sorting, Guid UserID)
         {
+            try
+            {
+                var dbConnection = await GetDbConnectionAsync();
+                var sql = $@" 
+                        SELECT * 
+                        FROM Patient INNER JOIN UserHospital 
+                        ON Patient.HospitalID=UserHospital.HospitalID
+                        WHERE Patient.IsDeleted=false AND UserID=@UserID
+                        ORDER BY {Sorting ?? "Patient.Id"} 
+                        LIMIT @MaxResultCount 
+                        OFFSET @SkipCount";
 
+                var parameters = new { SkipCount, MaxResultCount, UserID };
+                return (await dbConnection.QueryAsync<Patient>(sql, parameters)).ToList();
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
+           
+        }
+
+        public async Task<int> GetTotalCountAsync(Guid userID)
+        {
             var dbConnection = await GetDbConnectionAsync();
-            var sql = @"SELECT * FROM Patient WHERE HospitalID=@HospitalID";
-            var parameters = new { HospitalID = hospitalID };
-            return (await dbConnection.QueryAsync<Patient>(sql, parameters, transaction: await GetDbTransactionAsync())).ToList();
+            var sql = "SELECT COUNT(*) FROM Patient " +
+                    "INNER JOIN UserHospital ON Patient.HospitalID = UserHospital.HospitalID " +
+                    "WHERE Patient.IsDeleted = false AND UserHospital.UserID = @UserID";
+            var parameters = new { UserID = userID };
+            return await dbConnection.ExecuteScalarAsync<int>(sql);
         }
     }
 }
