@@ -25,7 +25,7 @@ namespace Ord.Hospital.Repositories
             {
                 var dbConnection = await GetDbConnectionAsync();
                 var sql = $@" 
-                        SELECT * 
+                        SELECT Patient.Id,PatientName,provinceCode,districtCode,communeCode,address,UserHospital.hospitalID
                         FROM Patient INNER JOIN UserHospital 
                         ON Patient.HospitalID=UserHospital.HospitalID
                         WHERE Patient.IsDeleted=false AND UserID=@UserID
