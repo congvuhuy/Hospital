@@ -36,6 +36,11 @@ namespace Ord.Hospital.Services
             _mapper = mapper;
             _repository = repository;
         }
+        public override async Task<ProvinceDto> GetAsync(int id) 
+        { 
+            var province = await _repository.GetAsync(id); 
+            return _mapper.Map<ProvinceDto>(province); 
+        }
         public override async Task<ProvinceDto> CreateAsync(CreateUpdateProvinceDto input)
         { 
             var provinceCode=_provinceRepository.GetByCodeAsync(input.ProvinceCode);
