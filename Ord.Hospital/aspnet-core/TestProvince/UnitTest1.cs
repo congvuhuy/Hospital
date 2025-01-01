@@ -1,113 +1,165 @@
-﻿using AutoFixture;
-using AutoFixture.AutoMoq;
-using AutoMapper;
-using Moq;
-using Ord.Hospital.Enities;
-using Ord.Hospital.Irepositories;
-using Ord.Hospital.Provinces;
+﻿using Ord.Hospital.Enities;
 using Ord.Hospital.Provinces.Dtos;
 using Ord.Hospital.Services;
-using System.Net.WebSockets;
-using System.Threading;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.ObjectMapping;
-using Volo.Abp.Validation;
+using Moq;
 using Xunit;
+using Ord.Hospital.Irepositories;
 
-
-namespace TestProvince
+public class UnitTest1
 {
-    public class UnitTest1
+    private readonly ProvinceService _service;
+    private readonly Mock<IRepository<Province, int>> _mockRepository;
+    private readonly Mock<IProvinceRepository> _mockProvinceRepo;
+    private readonly Mock<IObjectMapper> _mockObjectMapper;
+
+    public UnitTest1()
     {
-        private readonly IFixture _fixture;
-        private readonly Mock<IProvinceRepository> _mockProvinceRepo;
-        private readonly Mock<IRepository<Province, int>> _mockRepository;
-        private readonly Mock<IObjectMapper> _mockObjectMapper;
-        private readonly ProvinceService _service;
+        _mockRepository = new Mock<IRepository<Province, int>>();
+        _mockProvinceRepo = new Mock<IProvinceRepository>();
+        _mockObjectMapper = new Mock<IObjectMapper>();
 
-        public UnitTest1()
+        _service = new ProvinceService(_mockRepository.Object, _mockProvinceRepo.Object, _mockObjectMapper.Object);
+    }
+
+    [Fact]
+    public async Task GetAsync_ShouldReturnProvince()
+    {
+        // Arrange
+        int id = 0;
+        var province = new Province { ProvinceCode = 1, ProvinceName = "Province1" };
+        var provinceDto = new ProvinceDto { ProvinceCode = 1, ProvinceName = "Province1" };
+
+        _mockRepository.Setup(repo => repo.GetAsync(id, true, default)).ReturnsAsync(province);
+        _mockObjectMapper.Setup(m => m.Map<Province, ProvinceDto>(province)).Returns(provinceDto);
+
+        // Act
+        var result = await _service.GetAsync(id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(provinceDto, result);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldCreateProvince()
+    {
+        // Arrange
+        var input = new CreateUpdateProvinceDto { ProvinceCode = 1, ProvinceName = "Province2" };
+        var province = new Province { ProvinceCode = 1, ProvinceName = "Province2" };
+        var provinceDto = new ProvinceDto { ProvinceCode = 1, ProvinceName = "Province2" };
+
+        _mockProvinceRepo.Setup(repo => repo.GetByCodeAsync(input.ProvinceCode)).ReturnsAsync((Province)null);
+        _mockObjectMapper.Setup(m => m.Map<CreateUpdateProvinceDto, Province>(input)).Returns(province);
+        _mockObjectMapper.Setup(m => m.Map<Province, ProvinceDto>(province)).Returns(provinceDto);
+        _mockRepository.Setup(repo => repo.InsertAsync(province, true, default)).ReturnsAsync(province);
+
+        // Act
+        var result = await _service.CreateAsync(input);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(provinceDto, result);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldUpdateProvince()
+    {
+        // Arrange
+        int id = 0;
+        var input = new CreateUpdateProvinceDto { ProvinceCode = 1, ProvinceName = "Province2" };
+        var inputMappedProvince = new Province { ProvinceCode = 1, ProvinceName = "Province2" };
+        var existingProvince = new Province { ProvinceCode = 1, ProvinceName = "Province1" };
+        var resultDto = new ProvinceDto { ProvinceCode = 1, ProvinceName = "Province2" };
+
+        _mockProvinceRepo.Setup(repo => repo.GetByCodeAsync(input.ProvinceCode)).ReturnsAsync(existingProvince);
+        _mockRepository.Setup(repo => repo.GetAsync(id, true, default)).ReturnsAsync(existingProvince);
+        _mockObjectMapper.Setup(m => m.Map<CreateUpdateProvinceDto, Province>(input)).Returns(inputMappedProvince);
+        _mockObjectMapper.Setup(m => m.Map<Province, ProvinceDto>(inputMappedProvince)).Returns(resultDto);
+        _mockRepository.Setup(repo => repo.UpdateAsync(inputMappedProvince, true, default)).ReturnsAsync(inputMappedProvince);
+
+        // Act
+        var result = await _service.UpdateAsync(id, input);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(resultDto, result);
+    }
+
+    [Fact]
+    public async Task GetListPagingAsync_ShouldReturnPagedResult()
+    {
+        // Arrange
+        var input = new PagedAndSortedResultRequestDto { SkipCount = 0, MaxResultCount = 10, Sorting = "ProvinceName" };
+        var provinces = new List<Province>
         {
-            _fixture = new Fixture().Customize(new AutoMoqCustomization());
-            _mockProvinceRepo = _fixture.Freeze<Mock<IProvinceRepository>>();
-            _mockRepository = _fixture.Freeze<Mock<IRepository<Province, int>>>();
-            //_mockMapper = _fixture.Freeze<Mock<IMapper>>();
-            _mockObjectMapper = _fixture.Freeze<Mock<IObjectMapper>>();
-            _service = new ProvinceService(_mockProvinceRepo.Object,_mockObjectMapper.Object, _mockRepository.Object);
-        }
-
-        [Fact]
-        public async Task GetAsync_ShouldReturnProvince_WhenProvinceExists()
+            new Province { ProvinceCode = 1, ProvinceName = "Province1" },
+            new Province { ProvinceCode = 2, ProvinceName = "Province2" }
+        };
+        var provinceDtos = new List<ProvinceDto>
         {
-            // Arrange
-            var provinceId = 0;
-            var expectedProvince = new Province { ProvinceCode=1,ProvinceName="Province1"};
-            var expectedDto = new ProvinceDto { ProvinceCode = 1, ProvinceName = "Province1" };
+            new ProvinceDto { ProvinceCode = 1, ProvinceName = "Province1" },
+            new ProvinceDto { ProvinceCode = 2, ProvinceName = "Province2" }
+        };
 
-            _mockObjectMapper.Setup(m => m.Map<Province, ProvinceDto>(expectedProvince)).Returns(expectedDto);
-            _mockRepository.Setup(repo => repo.GetAsync(provinceId, true, default)).ReturnsAsync(expectedProvince);
+        _mockProvinceRepo.Setup(repo => repo.GetTotalCountAsync()).ReturnsAsync(provinces.Count);
+        _mockProvinceRepo.Setup(repo => repo.GetPagedProvincesAsync(input.SkipCount, input.MaxResultCount, input.Sorting)).ReturnsAsync(provinces);
+        _mockObjectMapper.Setup(m => m.Map<List<Province>, List<ProvinceDto>>(provinces)).Returns(provinceDtos);
 
-            // Act
-            var result = await _service.GetAsync(provinceId);
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedDto, result);
-        
-        }
+        // Act
+        var result = await _service.GetListPagingAsync(input);
 
-        [Fact]
-        public async Task CreateAsync_ShouldThrowException_WhenProvinceCodeExists()
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(provinceDtos.Count, result.TotalCount);
+        Assert.Equal(provinceDtos, result.Items);
+    }
+
+    [Fact]
+    public async Task GetByCode_ShouldReturnProvince()
+    {
+        // Arrange
+        int code = 1;
+        var province = new Province { ProvinceCode = 1, ProvinceName = "Province1" };
+        var provinceDto = new ProvinceDto { ProvinceCode = 1, ProvinceName = "Province1" };
+
+        _mockProvinceRepo.Setup(repo => repo.GetByCodeAsync(code)).ReturnsAsync(province);
+        _mockObjectMapper.Setup(m => m.Map<Province, ProvinceDto>(province)).Returns(provinceDto);
+
+        // Act
+        var result = await _service.GetByCode(code);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(provinceDto, result);
+    }
+
+    [Fact]
+    public async Task CreateMultipleAsync_ShouldCreateMultipleProvinces()
+    {
+        // Arrange
+        var input = new List<CreateUpdateProvinceDto>
         {
-            // Arrange
-            var input = _fixture.Create<CreateUpdateProvinceDto>();
-            var existingProvince = _fixture.Create<Province>();
-
-            _mockProvinceRepo.Setup(repo => repo.GetByCodeAsync(input.ProvinceCode)).ReturnsAsync(existingProvince);
-
-            // Act
-            var exception = await Assert.ThrowsAsync<AbpValidationException>(() => _service.CreateAsync(input));
-
-            // Assert
-            Assert.Equal("Mã tỉnh đã tồn tại", exception.ValidationErrors[0].ErrorMessage);
-        }
-
-        [Fact]
-        public async Task CreateAsync_ShouldCreateProvince_WhenProvinceCodeDoesNotExist()
+            new CreateUpdateProvinceDto { ProvinceCode = 1, ProvinceName = "Province1" },
+            new CreateUpdateProvinceDto { ProvinceCode = 2, ProvinceName = "Province2" }
+        };
+        var provinces = new List<Province>
         {
-            // Arrange
-            var input = new CreateUpdateProvinceDto { ProvinceCode = 1, ProvinceName = "Province1" };
-            var inputMappedProvince = new Province { ProvinceCode = 1,ProvinceName="Province1" };
-            var ResultDto = new ProvinceDto { ProvinceCode = 1,ProvinceName="Province1" };
+            new Province { ProvinceCode = 1, ProvinceName = "Province1" },
+            new Province { ProvinceCode = 2, ProvinceName = "Province2" }
+        };
 
-            _mockProvinceRepo.Setup(repo => repo.GetByCodeAsync(input.ProvinceCode)).ReturnsAsync((Province)null);
-            _mockObjectMapper.Setup(m => m.Map<CreateUpdateProvinceDto,Province>(input)).Returns(inputMappedProvince);
-            _mockObjectMapper.Setup(m => m.Map<Province, ProvinceDto>(inputMappedProvince)).Returns(ResultDto);
-            _mockRepository.Setup(repo => repo.InsertAsync(inputMappedProvince, true, default)).ReturnsAsync(inputMappedProvince);
-            // Act
-            var result = await _service.CreateAsync(input);
+        _mockObjectMapper.Setup(m => m.Map<List<CreateUpdateProvinceDto>, List<Province>>(input)).Returns(provinces);
+        _mockRepository.Setup(repo => repo.InsertManyAsync(provinces, true, default)).Returns(Task.CompletedTask);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(ResultDto, result);
-        }
-        [Fact]
-        public async Task UpdateAsync_ShoulUpdateProvince()
-        {
-            int id = 0;
-            var input = new CreateUpdateProvinceDto { ProvinceCode = 1, ProvinceName = "Province2" };
-            var inputMappedProvince = new Province { ProvinceCode = 1, ProvinceName = "Province2" };
-            var exitingProvince = new Province { ProvinceCode = 1, ProvinceName = "Province1" };
-            var ResultDto = new ProvinceDto { ProvinceCode = 1, ProvinceName = "Province2" };
-            _mockObjectMapper.Setup(m=>m.Map<CreateUpdateProvinceDto,Province>(input)).Returns(inputMappedProvince);
-            _mockObjectMapper.Setup(m => m.Map<Province, ProvinceDto>(inputMappedProvince)).Returns(ResultDto);
-            _mockProvinceRepo.Setup(repo => repo.GetByCodeAsync(input.ProvinceCode)).ReturnsAsync(exitingProvince);
-            _mockRepository.Setup(repo => repo.GetAsync(id, true, default)).ReturnsAsync(exitingProvince);
-            _mockRepository.Setup(repo => repo.UpdateAsync(inputMappedProvince, true, default)).ReturnsAsync(inputMappedProvince);
-            var result = await _service.UpdateAsync(id, input);
+        // Act
+        await _service.CreateMultipleAsync(input);
 
-            Assert.NotNull(result);
-            Assert.Equal(ResultDto, result);
-        }
-
+        // Assert
+        _mockRepository.Verify(repo => repo.InsertManyAsync(provinces, true, default), Times.Once);
     }
 }

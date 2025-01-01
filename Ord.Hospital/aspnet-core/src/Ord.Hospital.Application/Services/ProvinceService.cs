@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
@@ -17,61 +18,104 @@ using Volo.Abp.Validation;
 
 namespace Ord.Hospital.Services
 {
-    public class ProvinceService :
-         CrudAppService<
-         Province,
-         ProvinceDto,
-         int,
-         PagedAndSortedResultRequestDto,
-         CreateUpdateProvinceDto>, IProvinceService
+    public class ProvinceService : CrudAppService<
+        Province,
+        ProvinceDto,
+        int,
+        PagedAndSortedResultRequestDto,
+        CreateUpdateProvinceDto>, IProvinceService
     {
         private readonly IProvinceRepository _provinceRepository;
-        private readonly IRepository<Province, int> _repository;
         private readonly IObjectMapper _objectMapper;
 
-        public ProvinceService(IProvinceRepository provinceRepository, IObjectMapper objectMapper, IRepository<Province, int> repository
-            ) : base(repository)
+        public ProvinceService(
+            IRepository<Province, int> repository,
+            IProvinceRepository provinceRepository,
+            IObjectMapper objectMapper
+        ) : base(repository)
         {
-            _provinceRepository = provinceRepository;
-            _objectMapper = objectMapper;
-            _repository = repository;
+            _provinceRepository = provinceRepository ?? throw new ArgumentNullException(nameof(provinceRepository));
+            _objectMapper = objectMapper ?? throw new ArgumentNullException(nameof(objectMapper));
         }
-        public override async Task<ProvinceDto> GetAsync(int id) 
-        { 
-            var province = await _repository.GetAsync(id); 
-            if (province == null) { 
-                throw new EntityNotFoundException(typeof(Province), id); 
-            } 
-            var mappedProvince = _objectMapper.Map<Province, ProvinceDto>(province); 
 
-            return mappedProvince; 
+        public override async Task<ProvinceDto> GetAsync(int id)
+        {
+            try
+            {
+                if (Repository == null) throw new NullReferenceException("Repository is null");
+                if (_objectMapper == null) throw new NullReferenceException("ObjectMapper is null");
+
+                var province = await Repository.GetAsync(id);
+                if (province == null)
+                {
+                    throw new EntityNotFoundException(typeof(Province), id);
+                }
+
+                var mappedProvince = _objectMapper.Map<Province, ProvinceDto>(province);
+                if (mappedProvince == null) throw new NullReferenceException("MappedProvince is null");
+
+                return mappedProvince;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in GetAsync: " + ex.Message);
+                throw;
+            }
         }
+
         public override async Task<ProvinceDto> CreateAsync(CreateUpdateProvinceDto input)
         {
-            var provinceCode = await _provinceRepository.GetByCodeAsync(input.ProvinceCode);
-            if (provinceCode != null)
+            try
             {
-                throw new AbpValidationException("Mã tỉnh đã tồn tại",
-                    new List<ValidationResult> { new ValidationResult("Mã tỉnh đã tồn tại") });
+                var provinceCode = await _provinceRepository.GetByCodeAsync(input.ProvinceCode);
+                if (provinceCode != null)
+                {
+                    throw new AbpValidationException("Mã tỉnh đã tồn tại",
+                        new List<ValidationResult> { new ValidationResult("Mã tỉnh đã tồn tại") });
+                }
+
+                var province = _objectMapper.Map<CreateUpdateProvinceDto, Province>(input);
+                await Repository.InsertAsync(province, true);
+
+                return _objectMapper.Map<Province, ProvinceDto>(province);
             }
-            var province = _objectMapper.Map<CreateUpdateProvinceDto, Province>(input);
-            await _repository.InsertAsync(province, true);
-            return _objectMapper.Map<Province, ProvinceDto>(province);
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in CreateAsync: " + ex.Message);
+                throw;
+            }
         }
 
         public override async Task<ProvinceDto> UpdateAsync(int id, CreateUpdateProvinceDto input)
         {
-            var provinceCode = await _provinceRepository.GetByCodeAsync(input.ProvinceCode);
-            var provinceID = await _repository.GetAsync(id);
-            if (provinceCode != null && provinceCode.Id != id)
+            try
             {
-                throw new AbpValidationException("Mã tỉnh đã tồn tại",
-                    new List<ValidationResult> { new ValidationResult("Mã tỉnh đã tồn tại") });
+                if (_objectMapper == null) throw new NullReferenceException("ObjectMapper is null");
+                if (_provinceRepository == null) throw new NullReferenceException("ProvinceRepository is null");
+                if (Repository == null) throw new NullReferenceException("Repository is null");
+
+                var provinceCode = await _provinceRepository.GetByCodeAsync(input.ProvinceCode);
+                if (provinceCode != null && provinceCode.Id != id)
+                {
+                    throw new AbpValidationException("Mã tỉnh đã tồn tại",
+                        new List<ValidationResult> { new ValidationResult("Mã tỉnh đã tồn tại") });
+                }
+
+                var provinceID = await Repository.GetAsync(id);
+                if (provinceID == null) throw new NullReferenceException("ProvinceID is null");
+
+                // Sử dụng ObjectMapper để map dữ liệu
+                provinceID= _objectMapper.Map<CreateUpdateProvinceDto, Province>(input);
+
+                await Repository.UpdateAsync(provinceID);
+
+                return _objectMapper.Map<Province, ProvinceDto>(provinceID);
             }
-            //var province = _objectMapper.Map(input, provinceID);
-            //await _repository.UpdateAsync(province);
-            //return _objectMapper.Map<Province, ProvinceDto>(province);
-            return await base.UpdateAsync(id, input);
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in UpdateAsync: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task<PagedResultDto<ProvinceDto>> GetListPagingAsync(PagedAndSortedResultRequestDto input)
@@ -98,12 +142,12 @@ namespace Ord.Hospital.Services
         {
             try
             {
-                var provinces = _objectMapper.Map< List <CreateUpdateProvinceDto> ,List <Province>>(input);
-                await _repository.InsertManyAsync(provinces);
+                var provinces = _objectMapper.Map<List<CreateUpdateProvinceDto>, List<Province>>(input);
+                await Repository.InsertManyAsync(provinces, true);
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception("Error in CreateMultipleAsync: " + ex.Message, ex);
             }
         }
     }
