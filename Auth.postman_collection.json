@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "21861213-bfee-4281-bdfa-56f53e522733",
+		"name": "Auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29650805"
+	},
+	"item": [
+		{
+			"name": "{{base_Url\n}}api/lien-thong/tai-khoan/dang-nhap",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is within an acceptable range\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(400);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"access_Token\", jsonData.accessToken);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tenDangNhap",
+							"value": "02839",
+							"type": "text"
+						},
+						{
+							"key": "matKhau",
+							"value": "T3JlbmRhQDEyMw==",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_Url\n}}api/lien-thong/tai-khoan/dang-nhap",
+					"host": [
+						"{{base_Url\n}}api"
+					],
+					"path": [
+						"lien-thong",
+						"tai-khoan",
+						"dang-nhap"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_Url\n}}api/lien-thong/tiep-nhan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is within an acceptable range\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"maGiaoDich\", jsonData.maGiaoDich);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add({\r",
+							"    key: \"Authorization\",\r",
+							"    value: \"Bearer \" + pm.environment.get(\"access_Token\")\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\r\n    \"HO_SO\": { \r\n\r\n        \"THONG_TIN_HANH_CHINH\": { \r\n\r\n            \"HO_TEN\": \"Nguyen Thị B\", \r\n\r\n            \"NGAY_SINH\": \"199904200000\", \r\n\r\n            \"GIOI_TINH\": 2, \r\n\r\n            \"SO_CCCD\": \"010019004240\", \r\n\r\n            \"MA_THE_BHYT\": \"DN151512512\", \r\n\r\n            \"DIA_CHI\": \"Số 1, Phường Giảng Võ, Quận Ba Đình, Thành phố Hà Nội\", \r\n\r\n            \"MATINH_CU_TRU\": \"01\", \r\n\r\n            \"MAHUYEN_CU_TRU\": \"001\", \r\n\r\n            \"MAXA_CU_TRU\": \"00031\", \r\n\r\n            \"MA_NGHE_NGHIEP\": \"00000\", \r\n\r\n            \"MA_DAN_TOC\": \"01\" \r\n\r\n        }, \r\n\r\n        \"THONG_TIN_KHAM_CHUA_BENH\": { \r\n\r\n            \"LUOT_KHAM\": { \r\n\r\n                \"MA_LK\": \"2022102\", \r\n\r\n                \"MA_CSKCB\": \"01212\", \r\n\r\n                \"NGAY_KHAM\": \"202211300828\" \r\n\r\n            }, \r\n\r\n            \"KHAM_THAI\": { \r\n\r\n                \"TIEN_SU_NOI_KHOA\": \"1;2\", \r\n\r\n                \"NGAY_DAU_KY_KINH_CUOI\": \"20220830\", \r\n\r\n                \"TUOI_THAI\": 12, \r\n\r\n                \"NGAY_DU_KIEN_SINH\": \"20220524\", \r\n\r\n                \"LAN_CO_THAI\": 1, \r\n\r\n                \"CAN_NANG\": \"51.00\", \r\n\r\n                \"CHIEU_CAO\": \"160\", \r\n\r\n                \"HA_TAM_THU\": \"60\", \r\n\r\n                \"HA_TAM_TRUONG\": \"120\", \r\n\r\n                \"CAO_TC\": \"11\", \r\n\r\n                \"VONG_BUNG\": \"106\", \r\n\r\n                \"KHUNG_CHAU\": \"30.5\", \r\n\r\n                \"THIEU_MAU\": 2, \r\n\r\n                \"PROTEIN_NIEU\": 0, \r\n\r\n                \"XN_HIV\": 2, \r\n\r\n                \"XN_VGB\": 0, \r\n\r\n                \"XN_GIANG_MAI\": 0, \r\n\r\n                \"XN_DUONG_HUYET\": 0, \r\n\r\n                \"SANG_LOC_TRUOC_SINH\": 1, \r\n\r\n                \"TIM_THAI\": 1, \r\n\r\n                \"NGOI_THAI\": 0, \r\n\r\n                \"TIEN_LUONG_DE\": 0, \r\n\r\n                \"NGUOI_KHAM\": 1 \r\n\r\n            } \r\n\r\n        } \r\n\r\n    } \r\n\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_Url\n}}api/lien-thong/tiep-nhan",
+					"host": [
+						"{{base_Url\n}}api"
+					],
+					"path": [
+						"lien-thong",
+						"tiep-nhan"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}api/lien-thong/ho-so",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is within an acceptable range\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add({\r",
+							"    key: \"Authorization\",\r",
+							"    value: \"Bearer \"+ pm.environment.get(\"access_Token\") \r",
+							"})\r",
+							"// pm.request.headers.add({\r",
+							"//     key: \"Accept\",\r",
+							"//     value: (\"application/json\") \r",
+							"// })\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "maGiaoDich",
+							"value": "{{maGiaoDich}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/lien-thong/ho-so",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"lien-thong",
+						"ho-so"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
