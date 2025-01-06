@@ -29,6 +29,7 @@ using Volo.Abp.Security.Claims;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Ord.Hospital.Extension;
 
 namespace Ord.Hospital;
 
@@ -70,6 +71,8 @@ public class HospitalHttpApiHostModule : AbpModule
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
+        //https
+        context.Services.AddSameSiteCookiePolicy();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -220,5 +223,6 @@ public class HospitalHttpApiHostModule : AbpModule
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
+        app.UseCookiePolicy();
     }
 }
